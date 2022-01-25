@@ -6,9 +6,10 @@ Uptime monitoring RESTful API server which allows authorized users to enter URLs
 ##### MERN Stack
 
 ### Notes:
+- jump-started the project from a MERN stack project template [MERN template](https://github.com/MoathShraim/Nodejs-rest-api-project-structure-Express)
 
 ## Implementation Steps:
-- [ ] make express server to test on
+- [x] ~~make express server to test on~~
 - [ ] log url data from static url
 - [ ] path to add urls
 - [ ] path to stop urls

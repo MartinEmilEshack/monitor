@@ -1,5 +1,5 @@
 Steps:
-	☐ make express server to test on
+	✔ make express server to test on @done(22-01-25 09:05)
 	☐ log url data from static url
 	☐ path to add urls
 	☐ path to stop urls
