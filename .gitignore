@@ -1,0 +1,11 @@
+# IDE configs
+.vscode
+
+# Project Files
+package-lock.json
+
+# Environment variables
+# *.env
+
+# Packages Directory
+node_modules/

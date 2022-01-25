@@ -1,0 +1,45 @@
+Steps:
+	☐ make express server to test on
+	☐ log url data from static url
+	☐ path to add urls
+	☐ path to stop urls
+	☐ crud urls in database
+	☐ GET POST UPDATE DELETE urls paths
+	☐ crud url reports in database
+	☐ alert when url is down
+	☐ send webhook notifications at uptime or downtime - check bosts.co integration
+	☐ sign-up path
+	☐ change or delete account path
+	☐ account email verifications
+	☐ send emails at uptime or downtime event
+	☐ store check types
+	☐ add tags to paths and searchability to checks with tags
+
+Features:
+	☐ Users can create a check to monitor a given URL if it is up or down.
+	☐ Users can edit, pause, or delete their checks if needed.
+	☐ Users can get detailed uptime reports about their checks availability, average response time, and total uptime/downtime.
+	☐ Sign-up with email verification.
+	☐ Stateless authentication using JWT.
+	☐ Users should receive email alerts whenever a check goes down or up.
+	☐ Users may receive a notification on a webhook URL by sending HTTP POST request whenever a check goes down or up.
+	☐ Users can group their checks by tags and get reports by tag.
+
+Expectations:
+	☐ Code quality.
+	☐ Code scalability as we should be able to add a new alerting notification channel like Slack, Firebase, SMS, etc.. with the minimum possible changes.
+	☐ Unit tests.
+
+Bonus:
+	☐ Swagger API documentation.
+	☐ Code linting.
+	☐ Docker.
+	☐ Pushover integration to receive alerts on mobile devices.
+
+
+Job Requirments ->
+	Strong programming skills in JavaScript, Node.js, Express framework and related technologies.
+	Experience with NoSQL, preferably MongoDB.
+	Experience in creating robust and secure RESTful APIs.
+	Familiarity with version control systems (we use git).Ability to jump in legacy code and understand it quickly.
+	Demonstrated expertise in managing a broad system with multiple integrated components.
