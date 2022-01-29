@@ -1,26 +1,53 @@
 {
-  "name": "monitor",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
-  "scripts": {
-    "debug": "ndb server.js",
-    "start": "nodemon server.js"
-  },
-  "author": "Martin Emil",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "express-mongo-sanitize": "^1.3.2",
-    "express-rate-limit": "^5.0.0",
-    "helmet": "^3.21.2",
-    "hpp": "^0.2.2",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.13.0",
-    "rxjs": "^7.5.2",
-    "validator": "^12.0.0",
-    "xss-clean": "^0.1.1"
-  }
+	"name": "monitor",
+	"version": "1.0.0",
+	"description": "Uptime monitoring RESTful API server",
+	"author": "Martin Emil",
+	"main": "app.js",
+	"scripts": {
+		"start": "node server.js",
+		"dev": "NODE_ENV=development npm start",
+		"watch:dev": "nodemon",
+		"test": "jest"
+	},
+	"dependencies": {
+		"bcryptjs": "^2.4.3",
+		"cors": "^2.8.5",
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"express-mongo-sanitize": "^1.3.2",
+		"express-rate-limit": "^5.0.0",
+		"helmet": "^3.21.2",
+		"hpp": "^0.2.2",
+		"jsonwebtoken": "^8.5.1",
+		"mongoose": "^5.13.0",
+		"rxjs": "^7.5.2",
+		"validator": "^12.0.0",
+		"xss-clean": "^0.1.1"
+	},
+	"devDependencies": {
+		"jest": "^27.4.7"
+	},
+	"nodemonConfig": {
+		"exec": "npm run dev",
+		"watch": [
+			"controllers/**",
+			"models/**",
+			"routes/**",
+			"utils/**",
+			"*.js",
+			"*.env",
+			"package.json"
+		],
+		"ignore": [
+			"public/**",
+			"requests/**",
+			"**/__tests__/**",
+			"*.test.js",
+			"*.spec.js"
+		]
+	},
+	"jest": {
+		"testEnvironment": "node"
+	}
 }

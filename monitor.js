@@ -1,15 +1,18 @@
 const express = require('express');
+
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
-
+const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/userRoutes');
+const checkRoutes = require('./routes/checkRoutes');
 const globalErrHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
+
 const app = express();
 
 // Allow Cross-Origin requests
@@ -27,9 +30,7 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // Body parser, reading data from body into req.body
-app.use(express.json({
-	limit: '15kb'
-}));
+app.use(express.json({ limit: '15kb' }));
 
 // Data sanitization against Nosql query injection
 app.use(mongoSanitize());
@@ -40,9 +41,17 @@ app.use(xss());
 // Prevent parameter pollution
 app.use(hpp());
 
+// Parse request body
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.raw());
 
-// Routes
+// Check Routes
+app.use('/checks', checkRoutes);
+
+// User Routes
 app.use('/api/v1/users', userRoutes);
+app.use(express.static(__dirname + '/public'));
 
 // handle undefined Routes
 app.use('*', (req, res, next) => {
