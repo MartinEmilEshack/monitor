@@ -6,7 +6,6 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
-const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/userRoutes');
 const checkRoutes = require('./routes/checkRoutes');
@@ -29,8 +28,10 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Body parser, reading data from body into req.body
+// Parse request body
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '15kb' }));
+app.use(express.raw());
 
 // Data sanitization against Nosql query injection
 app.use(mongoSanitize());
@@ -41,16 +42,11 @@ app.use(xss());
 // Prevent parameter pollution
 app.use(hpp());
 
-// Parse request body
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.raw());
-
 // Check Routes
 app.use('/checks', checkRoutes);
 
 // User Routes
-app.use('/api/v1/users', userRoutes);
+app.use('/users', userRoutes);
 app.use(express.static(__dirname + '/public'));
 
 // handle undefined Routes

@@ -1,14 +1,19 @@
 const AppError = require('../utils/appError');
-const APIFeatures = require('../utils/apiFeatures');
+const APIFeatures = require('../utils/ApiFeatures');
+const { Model } = require('mongoose');
+const express = require('express');
 
+/**
+ * Returns a request handler that deletes a Model in DB 
+ * @param {Model} Model 
+ * @returns {express.RequestHandler} RequestHandler
+ */
 exports.deleteOne = Model => async (req, res, next) => {
 	try {
 		const doc = await Model.findByIdAndDelete(req.params.id);
-
 		if (!doc) {
 			return next(new AppError(404, 'fail', 'No document found with that id'), req, res, next);
 		}
-
 		res.status(204).json({
 			status: 'success',
 			data: null
@@ -18,6 +23,11 @@ exports.deleteOne = Model => async (req, res, next) => {
 	}
 };
 
+/**
+ * Returns a request handler that updatesOne Model in DB 
+ * @param {Model} Model 
+ * @returns {express.RequestHandler} RequestHandler
+ */
 exports.updateOne = Model => async (req, res, next) => {
 	try {
 		const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
@@ -41,6 +51,11 @@ exports.updateOne = Model => async (req, res, next) => {
 	}
 };
 
+/**
+ * Returns a request handler that createsOne Model in DB 
+ * @param {Model} Model
+ * @returns {express.RequestHandler} RequestHandler
+ */
 exports.createOne = Model => async (req, res, next) => {
 	try {
 		const doc = await Model.create(req.body);
@@ -57,43 +72,35 @@ exports.createOne = Model => async (req, res, next) => {
 	}
 };
 
+/**
+ * Returns a request handler that getOne Model from DB 
+ * @param {Model} Model 
+ * @returns {express.RequestHandler} RequestHandler
+ */
 exports.getOne = Model => async (req, res, next) => {
 	try {
 		const doc = await Model.findById(req.params.id);
-
 		if (!doc) {
-			return next(new AppError(404, 'fail', 'No document found with that id'), req, res, next);
+			return next(
+				new AppError(404, 'fail', 'No document found with that id'),
+				req, res, next
+			);
 		}
-
-		res.status(200).json({
-			status: 'success',
-			data: {
-				doc
-			}
-		});
-	} catch (error) {
-		next(error);
-	}
+		res.status(200).json({ status: 'success', data: { doc } });
+	} catch (error) { next(error); }
 };
 
+/**
+ * Returns a request handler that getAll entries of a Model from DB 
+ * @param {Model} Model 
+ * @returns {express.RequestHandler} RequestHandler
+ */
 exports.getAll = Model => async (req, res, next) => {
 	try {
-		const features = new APIFeatures(Model.find(), req.query)
-			.sort()
-			.paginate();
-
+		const features = new APIFeatures(Model.find(), req.query).sort().paginate();
 		const doc = await features.query;
-
 		res.status(200).json({
-			status: 'success',
-			results: doc.length,
-			data: {
-				data: doc
-			}
+			status: 'success', results: doc.length, data: { data: doc }
 		});
-
-	} catch (error) {
-		next(error);
-	}
-
+	} catch (error) { next(error); }
 };

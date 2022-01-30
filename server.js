@@ -30,18 +30,17 @@ mongoose.connect(database, {
 	useCreateIndex: true,
 	useFindAndModify: false
 }).then(con => {
-	console.log('DB connection Successfully!');
+	console.info('Database connected successfully');
+	// Start the server
+	const port = process.env.PORT;
+	app.listen(port, () => {
+		console.log(`Application is running on port ${port}`);
+		pollTask(clockwork);
+		updateStateTask(clockwork);
+	});
 }).catch(err => {
-	console.error('Error connecting to the databae');
+	console.error('Error connecting to the database');
 	console.error(err.name, err.message);
 	console.error('shutting down...');
-	// process.exit(1);
-});
-
-// Start the server
-const port = process.env.PORT;
-app.listen(port, () => {
-	console.log(`Application is running on port ${port}`);
-	pollTask(clockwork);
-	updateStateTask(clockwork);
+	process.exit(1);
 });
