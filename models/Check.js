@@ -183,7 +183,7 @@ class Check {
 			},
 			tags: [String],
 			ignoreSSL: { type: Boolean, default: false, set: ig => ig === 'true' },
-			lastUpdate: { type: Number, default: Date.now() },
+			lastUpdate: { type: Number, default: 0 },
 			active: { type: Boolean, default: true },
 			checkStateId: { type: mongoose.Schema.Types.ObjectId, ref: 'CheckState', immutable: true }
 		};
