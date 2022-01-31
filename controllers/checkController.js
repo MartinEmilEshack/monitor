@@ -11,15 +11,14 @@ const base = require('./baseController');
  */
 exports.newCheck = async (req, res, next) => {
 	try {
-		CheckModel.create({ userId: req.user._id, ...req.body }).then(tempCheck => {
-			CheckStateModel.create({
-				userId: req.user._id, checkId: tempCheck._id
-			}).then(checkState =>
-				CheckModel.findByIdAndUpdate(
-					tempCheck._id, { checkStateId: checkState._id }, { new: true, strict: false },
-				).then(check => res.status(201).json({ status: 'success', data: { check } }))
-			);
+		const tempCheck = await CheckModel.create({ userId: req.user._id, ...req.body });
+		const checkState = await CheckStateModel.create({
+			userId: req.user._id, checkId: tempCheck._id
 		});
+		const check = await CheckModel.findByIdAndUpdate(
+			tempCheck._id, { checkStateId: checkState._id }, { new: true, strict: false },
+		);
+		res.status(201).json({ status: 'success', data: { check } });
 	} catch (error) { next(error); }
 };
 

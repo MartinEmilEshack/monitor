@@ -136,8 +136,8 @@ class Check {
 				get: timeout => Math.round(timeout),
 				set: timeout => Math.round(timeout),
 				validate: {
-					validator: function (timeout) { return timeout >= 1 && timeout <= this.interval; },
-					message: 'Timeout is too small must be at least 1sec'
+					validator: function (timeout) { return timeout >= 1 && timeout <= this.interval * 60; },
+					message: 'Timeout is too small or greater than interval'
 				}
 			},
 			threshold: {
