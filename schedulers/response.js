@@ -1,6 +1,6 @@
-const { Observable, Subject, map, buffer } = require("rxjs");
-const Check = require("../models/CheckModel");
-const CheckState = require("../models/CheckStateModel");
+const { Observable, Subject, map, buffer, bufferWhen, filter } = require("rxjs");
+const { Check } = require("../models/Check");
+const { CheckState } = require("../models/CheckState");
 const alert = require("./alert");
 
 /** @type {Subject<{check: Check, sendTime: number, responseTime: number}>} */
@@ -8,7 +8,11 @@ const response = new Subject();
 
 /** @param  {Observable<number>} clockwork */
 const updateStateTask = (clockwork) => {
-	response.pipe(map(prepareState), buffer(clockwork)).subscribe(bulkUpdateState);
+	response.pipe(
+		map(prepareState),
+		buffer(clockwork),
+		filter(arr => arr.length !== 0)
+	).subscribe(bulkUpdateState);
 };
 
 /** @param  {{check: Check, sendTime: number, responseTime: number}} checkResponse */
@@ -26,11 +30,11 @@ const prepareState = ({ check, sendTime, responseTime }) => {
 		check.state.downtime += (sendTime - check.lastUpdate);
 	}
 	check.lastUpdate = sendTime;
-	if (check.state.downtime >= check.threshold) alert.next(check);
+	if (check.state.downCount === check.threshold) alert.next(check);
 
-	if (check.protocol === 'TCP')
-		console.log(`TCP ping ${responseTime}`);
-	else console.log(`HTTP/S ping ${responseTime}`);
+	// if (check.protocol === 'TCP')
+	// 	console.log(`TCP ping ${responseTime}`);
+	// else console.log(`HTTP/S ping ${responseTime}`);
 	return { check, sendTime, responseTime: Math.abs(responseTime) };
 };
 

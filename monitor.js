@@ -42,12 +42,13 @@ app.use(xss());
 // Prevent parameter pollution
 app.use(hpp());
 
-// Check Routes
-app.use('/checks', checkRoutes);
+app.use(express.static(__dirname + '/public'));
 
 // User Routes
 app.use('/users', userRoutes);
-app.use(express.static(__dirname + '/public'));
+
+// Check Routes
+app.use('/checks', checkRoutes);
 
 // handle undefined Routes
 app.use('*', (req, res, next) => {

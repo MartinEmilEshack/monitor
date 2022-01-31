@@ -1,5 +1,5 @@
 const { Subject, observeOn, asyncScheduler } = require("rxjs");
-const Check = require("../models/CheckModel");
+const { Check } = require("../models/Check");
 const email = require("../notifiers/email");
 const logger = require("../notifiers/logger");
 const webhook = require("../notifiers/webhook");

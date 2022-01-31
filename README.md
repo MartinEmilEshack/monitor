@@ -15,19 +15,23 @@ Uptime monitoring RESTful API server which allows authorized users to enter URLs
 -  [x] ~~make express server to test on~~
 -  [x] ~~log url data from static url~~
 -  [x] ~~path to add urls~~
--  [ ] path to stop urls
--  [ ] crud urls in database
--  [ ] GET POST UPDATE DELETE urls paths
--  [ ] crud url reports in database
--  [x] ~~alert when url is down~~
--  [ ] alert with email
--  [ ] send webhook notifications at uptime or downtime - check bosta.co integration
--  [ ] sign-up path
--  [ ] change or delete account path
--  [ ] account email verifications
+-  [x] ~~path to stop urls~~
+-  [x] ~~crud urls in database~~
+-  [x] ~~GET POST UPDATE DELETE urls paths~~
+-  [ ] GET POST UPDATE DELETE reports paths
+-  [x] ~~crud url reports in database~~
+-  [ ] alert when url is down after being up
+-  [ ] alert when url is up after being down
 -  [ ] send emails at uptime or downtime event
--  [ ] store check types
--  [ ] add tags to paths and searchability to checks with tags
+-  [ ] send webhook notifications at uptime or downtime - check bosta.co integration
+-  [x] ~~sign-up path~~
+-  [x] ~~log-in path~~
+-  [ ] change account path
+-	[x] ~~delete account path~~
+-  [ ] account email verifications
+-  [ ] store check tags
+-  [ ] searching mechanisms for checks name, id, tags
+-  [ ] searching mechanisms for reports id, user_id, check_name, check_id, check_tags
 
 ## Requested Features:
 

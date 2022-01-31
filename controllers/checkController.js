@@ -1,14 +1,74 @@
-const Check = require('../models/CheckModel');
+const { Check, CheckModel } = require('../models/Check');
+const { CheckStateModel } = require('../models/CheckState');
 const { toPoll } = require('../schedulers/poll');
 const base = require('./baseController');
 
-// exports.getAllUsers = base.getAll(User);
 
-exports.getAllUsers = (req, res, next) => {
-	res.json({ checks: 'ok' });
+/**
+ * Returns a request handler that creates a new Check in DB
+ * @async
+ * @returns {express.RequestHandler} RequestHandler
+ */
+exports.newCheck = async (req, res, next) => {
+	try {
+		CheckModel.create({ userId: req.user._id, ...req.body }).then(tempCheck => {
+			CheckStateModel.create({
+				userId: req.user._id, checkId: tempCheck._id
+			}).then(checkState =>
+				CheckModel.findByIdAndUpdate(
+					tempCheck._id, { checkStateId: checkState._id }, { new: true, strict: false },
+				).then(check => res.status(201).json({ status: 'success', data: { check } }))
+			);
+		});
+	} catch (error) { next(error); }
 };
 
-exports.newCheck = (req, res, next) => {
-	const check = new Check(req.body);
-	toPoll.push(check);
+/**
+ * Returns a request handler that gets all the user's Checks from DB
+ * @async
+ * @returns {express.RequestHandler} RequestHandler
+ */
+exports.getAllChecks = async (req, res, next) => {
+	try {
+		const checks = await CheckModel.find({ userId: req.user._id });
+		res.status(200).json({ status: 'success', results: checks.length, data: { checks } });
+	} catch (error) { next(error); }
 };
+
+/**
+ * Returns a request handler that gets a specific Check from DB
+ * @async
+ * @returns {express.RequestHandler} RequestHandler
+ */
+exports.getCheck = base.getOne(CheckModel);
+
+/**
+ * Returns a request handler that updates a specific Check in DB
+ * @async
+ * @returns {express.RequestHandler} RequestHandler
+ */
+exports.updateCheck = base.updateOne(CheckModel);
+
+/**
+ * Returns a request handler that deletes a specific Check in DB
+ * @async
+ * @returns {express.RequestHandler} RequestHandler
+ */
+exports.deleteCheck = async (req, res, next) => {
+	try {
+		const check = await CheckModel.findByIdAndDelete(req.params.id);
+		if (!check) return next(new AppError(
+			404, 'fail', 'No document found with that id'), req, res, next
+		);
+		await CheckStateModel.findByIdAndDelete(check.checkStateId);
+		res.status(204).json({ status: 'success', data: null });
+	} catch (error) { next(error); }
+};
+
+
+// try {
+// 	const checkModel = await CheckModel.create({ userId: req.user._id, ...req.body });
+// 	const check = new Check(checkModel.toObject());
+// 	check.setUser(req.user);
+// 	toPoll.push(check);
+// } catch (error) { next(error); }

@@ -2,7 +2,7 @@ const { from, Observable } = require("rxjs");
 const net = require('net');
 const http = require('http');
 const https = require('https');
-const Check = require("../models/CheckModel");
+const { Check } = require("../models/Check");
 const { response } = require("./response");
 
 const toPoll = [];

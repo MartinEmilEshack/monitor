@@ -33,17 +33,14 @@ class User {
 				type: String,
 				required: [true, "Please fill your password confirm"],
 				validate: {
-					validator: function (el) {
-						// "this" works only on create and save
-						return el === this.password;
-					},
+					validator: function (el) { return el === this.password; },
 					message: "Your password and confirmation password are not the same",
 				},
 			},
 			role: {
 				type: String,
-				enum: ["admin", "teacher", "student"],
-				default: "student",
+				enum: ['admin', 'user'],
+				default: 'user',
 			},
 			active: {
 				type: Boolean,
@@ -63,7 +60,7 @@ class User {
 	}
 }
 
-/** @type {mongoose.Schema<User, User>} */
+/** @type {mongoose.Schema<User, mongoose.Model<User>>} */
 const userSchema = new mongoose.Schema(User.getModelSchema());
 
 // encrypt the password using 'bcryptjs'
@@ -81,21 +78,7 @@ userSchema.pre("save", async function (next) {
 // This is Instance Method that is gonna be available on all documents in a certain collection
 userSchema.methods.correctPassword = User.isCorrectPassword;
 
-const UserModel = mongoose.model("User", userSchema);
+/** @type {mongoose.Model<User>} */
+const UserModel = mongoose.model('User', userSchema, 'users');
+
 module.exports = { User, UserModel };
-
-
-// "user": {
-//		"name": "Martin"
-// 	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZjY5MWZiYWQwYWM4MTIzNWZkNDExOCIsImlhdCI6MTY0MzU0OTE4MCwiZXhwIjoxNjQzNTQ5MTgwfQ.33eNGegjqSwobLg89kJwvVX5G97sao5kldfPF3wpnKw",
-// 		"data": {
-// 		"user": {
-// 			"role": "admin",
-// 				"active": true,
-// 					"_id": "61f691fbad0ac81235fd4118",
-// 						"name": "Martin",
-// 							"email": "mar10_emil@yahoo.com",
-// 								"__v": 0;
-// 		}
-// 	}
-// }

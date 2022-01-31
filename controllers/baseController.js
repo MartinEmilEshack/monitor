@@ -11,16 +11,12 @@ const express = require('express');
 exports.deleteOne = Model => async (req, res, next) => {
 	try {
 		const doc = await Model.findByIdAndDelete(req.params.id);
-		if (!doc) {
-			return next(new AppError(404, 'fail', 'No document found with that id'), req, res, next);
-		}
-		res.status(204).json({
-			status: 'success',
-			data: null
-		});
-	} catch (error) {
-		next(error);
-	}
+		if (!doc) return next(
+			new AppError(404, 'fail', 'No document found with that id'),
+			req, res, next
+		);
+		res.status(204).json({ status: 'success', data: null });
+	} catch (error) { next(error); }
 };
 
 /**
@@ -30,25 +26,17 @@ exports.deleteOne = Model => async (req, res, next) => {
  */
 exports.updateOne = Model => async (req, res, next) => {
 	try {
-		const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
-			new: true,
-			runValidators: true
-		});
-
-		if (!doc) {
-			return next(new AppError(404, 'fail', 'No document found with that id'), req, res, next);
-		}
-
+		const doc = await Model.findByIdAndUpdate(
+			req.params.id, req.body, { new: true, runValidators: true, strict: 'throw' }
+		);
+		if (!doc) return next(
+			new AppError(404, 'fail', 'No document found with that id'),
+			req, res, next
+		);
 		res.status(200).json({
-			status: 'success',
-			data: {
-				doc
-			}
+			status: 'success', data: { [doc.collection.modelName]: doc }
 		});
-
-	} catch (error) {
-		next(error);
-	}
+	} catch (error) { next(error); }
 };
 
 /**
@@ -59,17 +47,10 @@ exports.updateOne = Model => async (req, res, next) => {
 exports.createOne = Model => async (req, res, next) => {
 	try {
 		const doc = await Model.create(req.body);
-
 		res.status(201).json({
-			status: 'success',
-			data: {
-				doc
-			}
+			status: 'success', data: { [doc.collection.modelName]: doc }
 		});
-
-	} catch (error) {
-		next(error);
-	}
+	} catch (error) { next(error); }
 };
 
 /**
@@ -80,13 +61,13 @@ exports.createOne = Model => async (req, res, next) => {
 exports.getOne = Model => async (req, res, next) => {
 	try {
 		const doc = await Model.findById(req.params.id);
-		if (!doc) {
-			return next(
-				new AppError(404, 'fail', 'No document found with that id'),
-				req, res, next
-			);
-		}
-		res.status(200).json({ status: 'success', data: { doc } });
+		if (!doc) return next(
+			new AppError(404, 'fail', 'No document found with that id'),
+			req, res, next
+		);
+		res.status(200).json({
+			status: 'success', data: { [doc.collection.modelName]: doc }
+		});
 	} catch (error) { next(error); }
 };
 
@@ -100,7 +81,7 @@ exports.getAll = Model => async (req, res, next) => {
 		const features = new APIFeatures(Model.find(), req.query).sort().paginate();
 		const doc = await features.query;
 		res.status(200).json({
-			status: 'success', results: doc.length, data: { data: doc }
+			status: 'success', results: doc.length, data: { [doc.collection.collectionName]: doc }
 		});
 	} catch (error) { next(error); }
 };
