@@ -115,7 +115,10 @@ class Check {
 				type: String, trim: true, enum: Object.keys(protocols),
 				default: 'HTTP', uppercase: true
 			},
-			path: { type: String, trim: true },
+			path: {
+				type: String, trim: true,
+				set: path => path.startsWith('/') ? path : `/${path}`,
+			},
 			port: {
 				type: Number, default: 80,
 				get: port => Math.round(port),
@@ -125,7 +128,7 @@ class Check {
 			interval: {
 				type: Number, default: 1000 * 60 * 10,
 				get: interval => Math.round(interval),
-				set: interval => Math.round(interval),
+				set: interval => 1000 * 60 * Math.round(interval),
 				validate: {
 					validator: interval => interval >= 1,
 					message: 'Interval is too small must be at least 1min'
@@ -134,7 +137,7 @@ class Check {
 			timeout: {
 				type: Number, default: 1000 * 5,
 				get: timeout => Math.round(timeout),
-				set: timeout => Math.round(timeout),
+				set: timeout => 1000 * Math.round(timeout),
 				validate: {
 					validator: function (timeout) { return timeout >= 1 && timeout <= this.interval * 60; },
 					message: 'Timeout is too small or greater than interval'
