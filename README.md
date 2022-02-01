@@ -27,7 +27,7 @@ Uptime monitoring RESTful API server which allows authorized users to enter URLs
 -  [x] ~~sign-up path~~
 -  [x] ~~log-in path~~
 -  [ ] change account path
--	[x] ~~delete account path~~
+-  [x] ~~delete account path~~
 -  [ ] account email verifications
 -  [ ] store check tags
 -  [ ] searching mechanisms for checks name, id, tags
@@ -36,11 +36,11 @@ Uptime monitoring RESTful API server which allows authorized users to enter URLs
 ## Requested Features:
 
 -  [ ] Sign-up with email verification.
--  [ ] Stateless authentication using JWT.
--  [ ] Users can create a check to monitor a given URL if it is up or down.
--  [ ] Users can edit, pause, or delete their checks if needed.
--  [ ] Users may receive a notification on a webhook URL by sending HTTP POST request whenever a check goes down or up.
--  [ ] Users should receive email alerts whenever a check goes down or up.
--  [ ] Users can get detailed uptime reports about their checks availability, average response time, and total uptime/downtime.
+-  [x] ~~Stateless authentication using JWT.~~
+-  [x] ~~Users can create a check to monitor a given URL if it is up or down.~~
+-  [x] ~~Users can edit, pause, or delete their checks if needed.~~
+-  [x] ~~Users may receive a notification on a webhook URL by sending HTTP POST request whenever a check goes down or up.~~
+-  [x] ~~Users should receive email alerts whenever a check goes down or up.~~
+-  [x] ~~Users can get detailed uptime reports about their checks availability, average response time, and total uptime/downtime.~~
 -  [ ] Users can group their checks by tags and get reports by tag.
 -  [ ] unit testing
