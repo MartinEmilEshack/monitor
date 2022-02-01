@@ -29,9 +29,8 @@ const email = async (check) => {
 				<h2>Hello ${check.user.name}</h2>
 				<h3>
 					We are informing you that your check ${check.name} is 
-					currently ${check.state.status.toUpperCase()}.
+					currently.. ${check.state.status.toUpperCase()}.
 				</h3>
-				<a href='http://localhost:3000/reports/${check.state._id}'>Full Report..</a>
 			</div>`,
 	});
 
