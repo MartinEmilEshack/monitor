@@ -1,0 +1,22 @@
+POST http://localhost:3000/checks HTTP/1.1
+content-type: application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZjY5MWZiYWQwYWM4MTIzNWZkNDExOCIsImlhdCI6MTY0MzcwODQzNiwiZXhwIjoxNjQ2MzAwNDM2fQ.VtEmIVcJW9QA1jpKq3d3g7VQKi4_p0xiyWUWV814MQA
+
+{
+	"name": "Webhooked Martin",
+	"url": "localhost",
+	"protocol": "http",
+	"path": "",
+	"port": "5050",
+	"webhook": "http://localhost:5050/webhook",
+	"timeout": "5",
+	"interval": "1",
+	"threshold": "1",
+	"tags": [],
+	"httpHeaders": {},
+	"ignoreSSL": "",
+	"assert": { "statusCode": "200" },
+	"authentication": { "username": "", "password": "" }
+}
+
+###

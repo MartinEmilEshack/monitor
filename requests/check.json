@@ -1,0 +1,21 @@
+{
+	"name": "",
+	"url": "",
+	"protocol": "",
+	"path": "",
+	"port": "",
+	"webhook": "",
+	"timeout": "",
+	"interval": "",
+	"threshold": "",
+	"httpHeaders": "",
+	"tags": "",
+	"ignoreSSL": "",
+	"authentication": {
+		"username": "",
+		"password": ""
+	},
+	"assert": {
+		"statusCode": ""
+	}
+}

@@ -1,0 +1,5 @@
+GET http://localhost:3000/checks/61f730451e029212b5392320 HTTP/1.1
+content-type: application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZjY5MWZiYWQwYWM4MTIzNWZkNDExOCIsImlhdCI6MTY0MzcwODQzNiwiZXhwIjoxNjQ2MzAwNDM2fQ.VtEmIVcJW9QA1jpKq3d3g7VQKi4_p0xiyWUWV814MQA
+
+###
