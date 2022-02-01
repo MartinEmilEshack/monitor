@@ -6,8 +6,6 @@ const { Check, CheckModel } = require("../models/Check");
 const { response } = require("./response");
 const { Document } = require("mongoose");
 
-const toPoll = [];
-
 /** @param  {Observable<number>} clockwork */
 const pollTask = (clockwork) => {
 	clockwork.subscribe(startPing);
@@ -18,7 +16,7 @@ const startPing = (clock) => {
 	if (clock <= 3) { if (clock === 0) recoverLongShutdown(); return; }
 	try {
 		CheckModel.find().$where(`this.lastUpdate <= ${Date.now()} - this.interval && this.active`)
-			.populate('checkStateId', "pollCount downCount status outages downtime uptime")
+			.populate('checkStateId', "-userId -checkId -history")
 			.populate('userId', 'name email')
 			.then(checks => {
 				if (!checks || !checks.length) return;
@@ -83,4 +81,4 @@ const sendRequest = (checkDoc) => {
 	}
 };
 
-module.exports = { toPoll, pollTask };
+module.exports = { pollTask };

@@ -1,6 +1,5 @@
 const { CheckModel } = require('../models/Check');
 const { CheckStateModel } = require('../models/CheckState');
-const { toPoll } = require('../schedulers/poll');
 const base = require('./baseController');
 
 
@@ -29,7 +28,7 @@ exports.newCheck = async (req, res, next) => {
  */
 exports.getAllChecks = async (req, res, next) => {
 	try {
-		const checks = await CheckModel.find({ userId: req.user._id });
+		const checks = await CheckModel.find({ userId: req.user._id }, '-userId -__v');
 		res.status(200).json({ status: 'success', results: checks.length, data: { checks } });
 	} catch (error) { next(error); }
 };
@@ -63,11 +62,3 @@ exports.deleteCheck = async (req, res, next) => {
 		res.status(204).json({ status: 'success', data: null });
 	} catch (error) { next(error); }
 };
-
-
-// try {
-// 	const checkModel = await CheckModel.create({ userId: req.user._id, ...req.body });
-// 	const check = new Check(checkModel.toObject());
-// 	check.setUser(req.user);
-// 	toPoll.push(check);
-// } catch (error) { next(error); }
