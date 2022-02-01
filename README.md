@@ -20,8 +20,8 @@ Uptime monitoring RESTful API server which allows authorized users to enter URLs
 -  [x] ~~GET POST UPDATE DELETE urls paths~~
 -  [ ] GET POST UPDATE DELETE reports paths
 -  [x] ~~crud url reports in database~~
--  [ ] alert when url is down after being up
--  [ ] alert when url is up after being down
+-  [x] ~~alert when url is down after being up~~
+-  [x] ~~alert when url is up after being down~~
 -  [ ] send emails at uptime or downtime event
 -  [ ] send webhook notifications at uptime or downtime - check bosta.co integration
 -  [x] ~~sign-up path~~

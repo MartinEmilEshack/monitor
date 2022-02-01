@@ -28,33 +28,7 @@ class Check {
 	state = null;
 	user = null;
 
-	/** @param  {Check} checkJSON */
-	constructor(checkJSON) {
-		const port = parseInt(checkJSON.port);
-		const timeout = parseInt(checkJSON.timeout);
-		const interval = parseInt(checkJSON.interval);
-		const threshold = parseInt(checkJSON.threshold);
-		const statusCode = parseInt(checkJSON.assert.statusCode);
-		const statusCodeValid = statusCode !== NaN && statusCode > 99 && statusCode < 600;
-		const checkAuth = checkJSON.authentication && checkJSON.authentication.username.length > 0;
-
-		this.name = checkJSON.name;
-		this.webhook = checkJSON.webhook;
-		this.interval = interval !== NaN && interval >= 1 ? 1000 * 60 * interval : 1000 * 60 * 10; // >= 1min default 10min
-		this.tags = checkJSON.tags;
-		this.assert.statusCode = statusCodeValid ? statusCode : 0;
-		this.protocol = protocols.hasOwnProperty(checkJSON.protocol) ? checkJSON.protocol : 'HTTP';
-		this.lastUpdate = Date.now();
-		this.threshold = threshold !== NaN ? threshold : 1; // 1 allowed request fails
-
-		this.url = checkJSON.url;
-		this.port = port !== NaN ? port : 80;
-		this.path = checkJSON.path;
-		this.httpHeaders = checkJSON.httpHeaders;
-		this.timeout = timeout !== NaN && timeout >= 1 ? 1000 * timeout : 1000 * 5; // >= 1sec default 5sec
-		this.authentication = checkAuth ? checkJSON.authentication : { username: '', password: '' };
-		this.ignoreSSL = checkJSON.ignoreSSL === 'true';
-	}
+	constructor() { }
 
 	/**
 	 * Adds current state of the check
@@ -105,6 +79,69 @@ class Check {
 			lastUpdate: this.lastUpdate,
 		});
 	};
+
+	/** 
+	 * @param  {Check} checkJSON
+	 * @returns {Check} check
+	 */
+	static fromJson(checkJSON) {
+		const port = parseInt(checkJSON.port);
+		const timeout = parseInt(checkJSON.timeout);
+		const interval = parseInt(checkJSON.interval);
+		const threshold = parseInt(checkJSON.threshold);
+		const statusCode = parseInt(checkJSON.assert.statusCode);
+		const statusCodeValid = statusCode !== NaN && statusCode > 99 && statusCode < 600;
+		const checkAuth = checkJSON.authentication && checkJSON.authentication.username.length > 0;
+
+		let check = new Check();
+
+		check.name = checkJSON.name;
+		check.webhook = checkJSON.webhook;
+		check.interval = interval !== NaN && interval >= 1 ? 1000 * 60 * interval : 1000 * 60 * 10; // >= 1min default 10min
+		check.tags = checkJSON.tags;
+		check.assert.statusCode = statusCodeValid ? statusCode : 0;
+		check.protocol = protocols.hasOwnProperty(checkJSON.protocol) ? checkJSON.protocol : 'HTTP';
+		check.lastUpdate = Date.now();
+		check.threshold = threshold !== NaN ? threshold : 1; // 1 allowed request fails
+
+		check.url = checkJSON.url;
+		check.port = port !== NaN ? port : 80;
+		check.path = checkJSON.path;
+		check.httpHeaders = checkJSON.httpHeaders;
+		check.timeout = timeout !== NaN && timeout >= 1 ? 1000 * timeout : 1000 * 5; // >= 1sec default 5sec
+		check.authentication = checkAuth ? checkJSON.authentication : { username: '', password: '' };
+		check.ignoreSSL = checkJSON.ignoreSSL === 'true';
+
+		return check;
+	}
+
+	/** 
+	 * @param {mongoose.Document<Check} checkDoc 
+	 * @returns {Check} check
+	 */
+	static fromDocument(checkDoc) {
+		const checkObj = checkDoc.toObject();
+		let check = new Check();
+		check.name = checkObj.name;
+		check.webhook = checkObj.webhook;
+		check.interval = checkObj.interval;
+		check.tags = checkObj.tags;
+		check.assert.statusCode = checkObj.assert.statusCode;
+		check.protocol = checkObj.protocol;
+		check.lastUpdate = checkObj.lastUpdate;
+		check.threshold = checkObj.threshold;
+		check.url = checkObj.url;
+		check.port = checkObj.port;
+		check.path = checkObj.path;
+		check.httpHeaders = checkObj.httpHeaders;
+		check.timeout = checkObj.timeout;
+		check.authentication = checkObj.authentication;
+		check.ignoreSSL = checkObj.ignoreSSL;
+
+		check.state = checkObj.checkStateId;
+		check.user = checkObj.userId;
+		return check;
+	}
 
 	static getModelSchema() {
 		return {
@@ -168,7 +205,7 @@ class Check {
 				default: {}
 			},
 			assert: {
-				type: {
+				type: new mongoose.Schema({
 					statusCode: {
 						type: Number, default: 0,
 						get: statusCode => Math.round(statusCode),
@@ -178,12 +215,13 @@ class Check {
 								(statusCode >= 100 && statusCode <= 500) || statusCode === 0,
 							message: 'Status code invalid'
 						}
-					},
-				}, default: {}
+					}
+				}, { _id: false }),
+				default: {}
 			},
 			tags: [String],
 			ignoreSSL: { type: Boolean, default: false, set: ig => ig === 'true' },
-			lastUpdate: { type: Number, default: 0 },
+			lastUpdate: { type: Number, default: (Date.now() - (1000 * 60)) },
 			active: { type: Boolean, default: true },
 			checkStateId: { type: mongoose.Schema.Types.ObjectId, ref: 'CheckState', immutable: true }
 		};

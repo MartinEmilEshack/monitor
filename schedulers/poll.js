@@ -2,8 +2,9 @@ const { from, Observable } = require("rxjs");
 const net = require('net');
 const http = require('http');
 const https = require('https');
-const { Check } = require("../models/Check");
+const { Check, CheckModel } = require("../models/Check");
 const { response } = require("./response");
+const { Document } = require("mongoose");
 
 const toPoll = [];
 
@@ -14,12 +15,20 @@ const pollTask = (clockwork) => {
 
 /** @param  {number} clock */
 const startPing = (clock) => {
-	// TODO: get all checks with Date.now() > check.lastUpdate + check.interval
-	// TODO: get CheckStates for all checks queried
-	// TODO: bulk update lastUpdate = check.lastUpdate + check.interval for all queried checks
-	// TODO: from({ check, checkState }[])
-	const scheduledChecks = from(toPoll);
-	scheduledChecks.subscribe(sendRequest);
+	if (clock <= 3) { if (clock === 0) recoverLongShutdown(); return; }
+	try {
+		CheckModel.find().$where(`this.lastUpdate <= ${Date.now()} - this.interval && this.active`)
+			.populate('checkStateId', "pollCount downCount status outages downtime uptime")
+			.populate('userId', 'name email')
+			.then(checks => {
+				if (!checks || !checks.length) return;
+				CheckModel.updateMany({}, [
+					{ $set: { lastUpdate: { $add: ['$lastUpdate', '$interval'] } } }
+				]).$where(`this.lastUpdate <= ${Date.now()} - this.interval && this.active`)
+					.then(b => console.log(b.nModified, clock));
+				from(checks).subscribe(sendRequest);
+			});
+	} catch (err) { console.error(err.name, err.message); }
 };
 
 /**
@@ -45,9 +54,10 @@ const deadResponse = (check, sendTime) => {
 };
 
 /**
- * @param  {Check} check
+ * @param  {Document<Check>} checkDoc
  */
-const sendRequest = (check) => {
+const sendRequest = (checkDoc) => {
+	const check = Check.fromDocument(checkDoc);
 	try {
 		if (check.protocol === 'TCP') {
 			const check = new net.Socket();

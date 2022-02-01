@@ -1,4 +1,4 @@
-const { Check, CheckModel } = require('../models/Check');
+const { CheckModel } = require('../models/Check');
 const { CheckStateModel } = require('../models/CheckState');
 const { toPoll } = require('../schedulers/poll');
 const base = require('./baseController');
