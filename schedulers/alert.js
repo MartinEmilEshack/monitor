@@ -9,8 +9,10 @@ const alert = new Subject();
 
 const async_alert = alert.pipe(observeOn(asyncScheduler));
 
-async_alert.subscribe({ next: email, error: err => console.error('email error') });
-async_alert.subscribe({ next: webhook, error: err => console.error('webhook error') });
-async_alert.subscribe({ next: logger, error: err => console.error('logger error') });
+const errorMessage = (src, err) => console.error(`${src} error`, err.name, this.error.message);
+
+async_alert.subscribe({ next: email, error: err => errorMessage('email', err) });
+async_alert.subscribe({ next: webhook, error: err => errorMessage('webhook', err) });
+async_alert.subscribe({ next: logger, error: err => errorMessage('logger', err) });
 
 module.exports = alert;
