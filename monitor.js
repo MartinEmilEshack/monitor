@@ -9,6 +9,7 @@ const cors = require('cors');
 
 const userRoutes = require('./routes/userRoutes');
 const checkRoutes = require('./routes/checkRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 const globalErrHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
 
@@ -49,6 +50,9 @@ app.use('/users', userRoutes);
 
 // Check Routes
 app.use('/checks', checkRoutes);
+
+// Check Routes
+app.use('/reports', reportRoutes);
 
 // handle undefined Routes
 app.use('*', (req, res, next) => {

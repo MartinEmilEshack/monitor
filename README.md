@@ -18,7 +18,7 @@ Uptime monitoring RESTful API server which allows authorized users to enter URLs
 -  [x] ~~path to stop urls~~
 -  [x] ~~crud urls in database~~
 -  [x] ~~GET POST UPDATE DELETE urls paths~~
--  [ ] GET POST UPDATE DELETE reports paths
+-  [x] ~~GET reports paths~~
 -  [x] ~~crud url reports in database~~
 -  [x] ~~alert when url is down after being up~~
 -  [x] ~~alert when url is up after being down~~
